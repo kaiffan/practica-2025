@@ -59,7 +59,7 @@ public class DictionaryController {
 
     @DeleteMapping("/delete-all")
     public ResponseEntity<String> deleteAllTranslations(@Valid @RequestBody DeleteRequestDTO request) {
-        boolean deleted = dictionaryService.deleteAllTranslations(request.getKey(), request.getDictionaryType());
+        boolean deleted = dictionaryService.deleteAllTranslations(request.getKeyId());
         if (deleted) {
             return ResponseEntity.ok("All translations deleted");
         }

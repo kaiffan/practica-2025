@@ -14,7 +14,7 @@ public interface DictionaryService {
 
     boolean deleteTranslation(UUID translationId);
 
-    boolean deleteAllTranslations(String key, String type);
+    boolean deleteAllTranslations(String keyId);
 
     List<WordEntryResponseDTO> getAllEntries();
 }

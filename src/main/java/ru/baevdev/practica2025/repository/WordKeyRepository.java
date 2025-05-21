@@ -16,4 +16,6 @@ public interface WordKeyRepository extends JpaRepository<WordKey, UUID> {
 
     @EntityGraph(attributePaths = "wordTranslations")
     List<WordKey> findAll();
+
+    Optional<WordKey> findById(UUID id);
 }

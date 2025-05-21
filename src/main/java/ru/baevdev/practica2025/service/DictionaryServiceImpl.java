@@ -99,9 +99,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     @Transactional
-    public boolean deleteAllTranslations(String key, String type) {
-        DictionaryType dictionaryType = convertToDictionaryType(type);
-        Optional<WordKey> optionalWordKey = wordKeyRepository.findByKeyAndDictionaryType(key, dictionaryType);
+    public boolean deleteAllTranslations(String keyID) {
+        Optional<WordKey> optionalWordKey = wordKeyRepository.findById(UUID.fromString(keyID));
         if (optionalWordKey.isEmpty()) {
             return false;
         }
