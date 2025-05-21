@@ -33,6 +33,8 @@ public class DictionaryServiceImpl implements DictionaryService {
         Optional<WordKey> optionalWordKey = wordKeyRepository.findByKeyAndDictionaryType(key, dictionaryType);
         WordKey wordKey;
 
+        validateKey(key, dictionaryType, value);
+
         wordKey = optionalWordKey.orElseGet(() -> wordKeyRepository.save(
                 WordKey.builder()
                         .key(key)
@@ -47,6 +49,24 @@ public class DictionaryServiceImpl implements DictionaryService {
                 .build();
 
         wordTranslationRepository.save(translation);
+    }
+
+    private void validateKey(String key, DictionaryType dictionaryType, String value) {
+        if (dictionaryType == DictionaryType.LANG_NUMBERS) {
+            if (key.length() != 5 || !key.matches("\\d{5}")) {
+                throw new IllegalArgumentException("Key must be exactly 5 digits for LANG_NUMBERS.");
+            }
+            if (value.length() != 4 || !value.matches("[a-zA-Z]{4}")) {
+                throw new IllegalArgumentException("Value must be exactly 4 Latin letters for LANG_NUMBERS.");
+            }
+        } else if (dictionaryType == DictionaryType.LANG_DIGITS) {
+            if (key.length() != 4 || !key.matches("[a-zA-Z]{4}")) {
+                throw new IllegalArgumentException("Key must be exactly 4 Latin letters for LANG_DIGITS.");
+            }
+            if (value.length() != 5 || !value.matches("\\d{5}")) {
+                throw new IllegalArgumentException("Value must be exactly 5 digits for LANG_DIGITS.");
+            }
+        }
     }
 
     @Override

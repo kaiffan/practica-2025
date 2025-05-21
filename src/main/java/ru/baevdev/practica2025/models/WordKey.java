@@ -21,7 +21,7 @@ public class WordKey {
     private UUID id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false, length = 10)
+    @Column(name = "type", nullable = false)
     private DictionaryType dictionaryType;
 
     @Column(name = "key", nullable = false)
