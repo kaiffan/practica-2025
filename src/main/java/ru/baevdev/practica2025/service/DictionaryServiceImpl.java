@@ -2,6 +2,7 @@ package ru.baevdev.practica2025.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import ru.baevdev.practica2025.dto.TranslationResponseDTO;
 import ru.baevdev.practica2025.dto.WordEntryResponseDTO;
 import ru.baevdev.practica2025.models.DictionaryType;
 import ru.baevdev.practica2025.models.WordKey;
@@ -13,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class DictionaryServiceImpl implements DictionaryService {
@@ -73,10 +75,14 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public List<WordTranslation> getTranslations(String key, String type) {
+    public List<TranslationResponseDTO> getTranslations(String key, String type) {
         DictionaryType dictionaryType = convertToDictionaryType(type);
+
         return wordKeyRepository.findByKeyAndDictionaryType(key, dictionaryType)
-                .map(wordKey -> wordTranslationRepository.findByWordKeyId(wordKey.getId()))
+                .map(wordKey -> wordTranslationRepository.findByWordKeyId(wordKey.getId())
+                        .stream()
+                        .map(t -> new TranslationResponseDTO(t.getId(), t.getValue()))
+                        .collect(Collectors.toList()))
                 .orElseGet(Collections::emptyList);
     }
 

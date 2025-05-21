@@ -14,7 +14,7 @@ import ru.baevdev.practica2025.service.DictionaryService;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/v1/dictionary")
@@ -37,13 +37,9 @@ public class DictionaryController {
             @Valid @RequestBody AllTranslationsRequestDTO allTranslationsRequestDTO
     ) {
         List<TranslationResponseDTO> translations = dictionaryService.getTranslations(
-                        allTranslationsRequestDTO.getKey(),
-                        allTranslationsRequestDTO.getDictionaryType()
-                )
-                .stream()
-                .map(t -> new TranslationResponseDTO(t.getId(), t.getValue()))
-                .collect(Collectors.toList());
-
+                allTranslationsRequestDTO.getKey(),
+                allTranslationsRequestDTO.getDictionaryType()
+        );
         return ResponseEntity.ok(translations);
     }
 
