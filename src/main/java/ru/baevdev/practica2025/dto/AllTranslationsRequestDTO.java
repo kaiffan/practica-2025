@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 public class AllTranslationsRequestDTO {
-    @NotBlank(message = "Value cannot be null")
+    @NotBlank(message = "Key cannot be null")
     private String key;
 
-    @NotBlank(message = "Value cannot be null")
+    @NotBlank(message = "DictionaryType cannot be null")
     private String dictionaryType;
 }

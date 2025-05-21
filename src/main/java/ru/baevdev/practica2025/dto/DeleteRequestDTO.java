@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class DeleteRequestDTO {
-    @NotBlank(message = "Value cannot be null")
+    @NotBlank(message = "KeyId cannot be null")
     private String keyId;
 }
