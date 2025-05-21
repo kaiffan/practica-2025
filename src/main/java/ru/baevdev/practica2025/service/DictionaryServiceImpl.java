@@ -2,6 +2,7 @@ package ru.baevdev.practica2025.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import ru.baevdev.practica2025.dto.WordEntryResponseDTO;
 import ru.baevdev.practica2025.models.DictionaryType;
 import ru.baevdev.practica2025.models.WordKey;
 import ru.baevdev.practica2025.models.WordTranslation;
@@ -106,6 +107,21 @@ public class DictionaryServiceImpl implements DictionaryService {
         wordKeyRepository.delete(wordKey);
 
         return true;
+    }
+
+    @Override
+    public List<WordEntryResponseDTO> getAllEntries() {
+        return wordKeyRepository.findAll().stream()
+                .map(wordKey -> new WordEntryResponseDTO(
+                        wordKey.getId(),
+                        wordKey.getDictionaryType(),
+                        wordKey.getKey(),
+                        wordKey.getWordTranslations()
+                                .stream()
+                                .map(WordTranslation::getValue)
+                                .toList()
+                ))
+                .toList();
     }
 
     private DictionaryType convertToDictionaryType(String typeStr) throws IllegalArgumentException {

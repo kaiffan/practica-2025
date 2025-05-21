@@ -1,5 +1,6 @@
 package ru.baevdev.practica2025.service;
 
+import ru.baevdev.practica2025.dto.WordEntryResponseDTO;
 import ru.baevdev.practica2025.models.DictionaryType;
 import ru.baevdev.practica2025.models.WordTranslation;
 
@@ -15,4 +16,6 @@ public interface DictionaryService {
     boolean deleteTranslation(UUID translationId);
 
     boolean deleteAllTranslations(String key, String type);
+
+    List<WordEntryResponseDTO> getAllEntries();
 }

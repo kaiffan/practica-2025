@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.baevdev.practica2025.dto.AllTranslationsRequestDTO;
-import ru.baevdev.practica2025.dto.DeleteRequestDTO;
-import ru.baevdev.practica2025.dto.DictionaryRequestDTO;
-import ru.baevdev.practica2025.dto.TranslationResponseDTO;
+import ru.baevdev.practica2025.dto.*;
 import ru.baevdev.practica2025.service.DictionaryService;
 
 import java.util.List;
@@ -48,6 +45,11 @@ public class DictionaryController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(translations);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<WordEntryResponseDTO>> getAllEntries() {
+        return ResponseEntity.ok(dictionaryService.getAllEntries());
     }
 
     @DeleteMapping("/delete/{id}")
