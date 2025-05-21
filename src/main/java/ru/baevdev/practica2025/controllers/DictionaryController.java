@@ -1,5 +1,6 @@
 package ru.baevdev.practica2025.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,14 +30,14 @@ public class DictionaryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addTranslation(@RequestBody DictionaryRequestDTO request) {
+    public ResponseEntity<String> addTranslation(@Valid @RequestBody DictionaryRequestDTO request) {
         dictionaryService.addTranslation(request.getKey(), request.getDictionaryType(), request.getValue());
         return ResponseEntity.ok("Translation added");
     }
 
     @GetMapping("/get")
     public ResponseEntity<List<TranslationResponseDTO>> getTranslations(
-            @RequestBody AllTranslationsRequestDTO allTranslationsRequestDTO
+            @Valid @RequestBody AllTranslationsRequestDTO allTranslationsRequestDTO
     ) {
         List<TranslationResponseDTO> translations = dictionaryService.getTranslations(
                         allTranslationsRequestDTO.getKey(),
@@ -59,7 +60,7 @@ public class DictionaryController {
     }
 
     @DeleteMapping("/delete-all")
-    public ResponseEntity<String> deleteAllTranslations(@RequestBody DeleteRequestDTO request) {
+    public ResponseEntity<String> deleteAllTranslations(@Valid @RequestBody DeleteRequestDTO request) {
         boolean deleted = dictionaryService.deleteAllTranslations(request.getKey(), request.getDictionaryType());
         if (deleted) {
             return ResponseEntity.ok("All translations deleted");

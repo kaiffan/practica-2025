@@ -33,13 +33,13 @@ public class DictionaryServiceImpl implements DictionaryService {
         Optional<WordKey> optionalWordKey = wordKeyRepository.findByKeyAndDictionaryType(key, dictionaryType);
         WordKey wordKey;
 
-        validateKey(key, dictionaryType, value);
+        validateEntry(key, value, dictionaryType);
 
         wordKey = optionalWordKey.orElseGet(() -> wordKeyRepository.save(
-                WordKey.builder()
-                        .key(key)
-                        .dictionaryType(dictionaryType)
-                        .build()
+                        WordKey.builder()
+                                .key(key)
+                                .dictionaryType(dictionaryType)
+                                .build()
                 )
         );
 
@@ -51,21 +51,23 @@ public class DictionaryServiceImpl implements DictionaryService {
         wordTranslationRepository.save(translation);
     }
 
-    private void validateKey(String key, DictionaryType dictionaryType, String value) {
-        if (dictionaryType == DictionaryType.LANG_NUMBERS) {
-            if (key.length() != 5 || !key.matches("\\d{5}")) {
-                throw new IllegalArgumentException("Key must be exactly 5 digits for LANG_NUMBERS.");
+    private void validateEntry(String key, String value, DictionaryType dictionaryType) {
+        switch (dictionaryType) {
+            case LANG_NUMBERS -> {
+                validateFormat(key, "\\d{5}", "Key must be exactly 5 digits for LANG_NUMBERS.");
+                validateFormat(value, "[a-zA-Z]{4}", "Value must be exactly 4 Latin letters for LANG_NUMBERS.");
             }
-            if (value.length() != 4 || !value.matches("[a-zA-Z]{4}")) {
-                throw new IllegalArgumentException("Value must be exactly 4 Latin letters for LANG_NUMBERS.");
+            case LANG_DIGITS -> {
+                validateFormat(key, "[a-zA-Z]{4}", "Key must be exactly 4 Latin letters for LANG_DIGITS.");
+                validateFormat(value, "\\d{5}", "Value must be exactly 5 digits for LANG_DIGITS.");
             }
-        } else if (dictionaryType == DictionaryType.LANG_DIGITS) {
-            if (key.length() != 4 || !key.matches("[a-zA-Z]{4}")) {
-                throw new IllegalArgumentException("Key must be exactly 4 Latin letters for LANG_DIGITS.");
-            }
-            if (value.length() != 5 || !value.matches("\\d{5}")) {
-                throw new IllegalArgumentException("Value must be exactly 5 digits for LANG_DIGITS.");
-            }
+            default -> throw new IllegalArgumentException("Unsupported dictionary type.");
+        }
+    }
+
+    private void validateFormat(String input, String regex, String errorMessage) {
+        if (!input.matches(regex)) {
+            throw new IllegalArgumentException(errorMessage);
         }
     }
 
@@ -106,11 +108,11 @@ public class DictionaryServiceImpl implements DictionaryService {
         return true;
     }
 
-    private DictionaryType convertToDictionaryType(String typeStr) {
+    private DictionaryType convertToDictionaryType(String typeStr) throws IllegalArgumentException {
         try {
             return DictionaryType.valueOf(typeStr.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid dictionary type: " + typeStr);
+            throw new IllegalArgumentException("Invalid dictionary type: " + typeStr + " must be: " + DictionaryType.LANG_NUMBERS + " " + DictionaryType.LANG_DIGITS);
         }
     }
 }
